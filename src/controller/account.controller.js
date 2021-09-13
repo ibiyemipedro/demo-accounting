@@ -34,7 +34,7 @@ exports.creditAccount = async (req, res, next) => {
     return JsonResponse(
       res,
       200,
-      "Credit Transaction successfull",
+      "Credit Transaction Successfull",
       updatedAccount
     );
   } catch (error) {

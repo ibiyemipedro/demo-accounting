@@ -1,6 +1,6 @@
-# Single-User Accounting System
+# Demo Accounting System
 
-A sample single user accounting system api
+A sample demo accounting system api
 
 **Author:** Ibiyemi Pedro
 
@@ -13,6 +13,7 @@ Node version - v14.15.1
 - nodeJs
 - expressJs
 - jest
+- Docker
 
 note: `run all commands in the applications root directory`
 `
@@ -45,8 +46,13 @@ The code base is structured in a modular way, following a Model - Controller - S
 
 ## Set - Up
 
-Clone the source file from github the github repo [https://github.com/ibiyemipedro/demo-accounting.](https://github.com/ibiyemipedro/demo-accounting) or unzip the source file to your project folder
+Clone the source file from github the github repo [https://github.com/ibiyemipedro/demo-accounting.](https://github.com/ibiyemipedro/demo-accounting) or unzip the source file to your project folder.
 
+<br><br>
+
+### **WITHOUT DOCKER**
+
+<br>
 ### Install Dependencies
 
 To install the dependencies of the project
@@ -75,6 +81,20 @@ npm run start:dev
 
 If everything runs fine, navigate to your browser and open http://localhost:8000. The project will be running on the endpoint.
 
+<br><br>
+
+### **WITH DOCKER**
+
+<br>
+
+### Start the project
+
+Run the following command to start
+
+```bash
+npm run docker:start
+```
+
 ## To test the application
 
 Run the following command to run the application tests
@@ -87,7 +107,7 @@ npm test
 
 ### Base URL
 
-**App Base URL** `http://localhost:3000/api/v1/`
+**App Base URL** `http://localhost:8000/api/v1/`
 
 ## Get user account infomation
 
@@ -224,5 +244,3 @@ npm test
 ## Contributing and Improvements
 
 - More Test Cases
-- Dockerize to
-- Transaction model/class to provide a contract on how transactions should look like

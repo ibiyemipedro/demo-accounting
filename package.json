@@ -8,7 +8,11 @@
   "scripts": {
     "start": "node index.js",
     "start:dev": "nodemon index.js",
-    "test": "jest  --detectOpenHandles"
+    "test": "jest  --detectOpenHandles",
+    "docker:start": "docker-compose up app",
+    "docker:stop": "docker-compose down",
+    "docker:build": "docker-compose build",
+    "docker:start:dev": "docker-compose up -d && docker exec -it api /bin/bash"
   },
   "engines": {
     "node": "14.15.0",

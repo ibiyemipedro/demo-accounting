@@ -13,7 +13,7 @@ const {
 
 class AccountService {
   /**
-   * Get acount info
+   * Get account info
    * @returns Users - Object
    */
   getAccountInfo(userId) {
@@ -23,7 +23,7 @@ class AccountService {
 
         resolve({ ...accountStore });
       } catch (error) {
-        error.source = "Get acount info";
+        error.source = "Get account info";
         return reject(error);
       }
     });
@@ -35,22 +35,24 @@ class AccountService {
    */
   creditUser({ userId, amount }) {
     return new Promise(async (resolve, reject) => {
-      try {
-        accountStore.balance += amount;
-        accountStore.updatedAt = new Date();
+      lock
+        .acquire(userId, () => {
+          accountStore.balance += amount;
+          accountStore.updatedAt = new Date();
 
-        transactionInstance.createTransaction({
-          amount,
-          userId,
-          transactionType: TRANSACTION_TYPES.CREDIT,
-          status: STATUS_TYPES.COMPLETED,
+          transactionInstance.createTransaction({
+            amount,
+            userId,
+            transactionType: TRANSACTION_TYPES.CREDIT,
+            status: STATUS_TYPES.COMPLETED,
+          });
+
+          return resolve({ ...accountStore });
+        })
+        .catch((error) => {
+          error.source = "Credit account service";
+          return reject(error);
         });
-
-        return resolve({ ...accountStore });
-      } catch (error) {
-        error.source = "Credit account service";
-        return reject(error);
-      }
     });
   }
 
@@ -60,26 +62,28 @@ class AccountService {
    */
   debitUser({ userId, amount }) {
     return new Promise(async (resolve, reject) => {
-      try {
-        if (accountStore.balance < amount)
-          return reject({
-            code: 400,
-            msg: "Insufficient balace to perform a debit",
+      lock
+        .acquire(userId, () => {
+          if (accountStore.balance < amount)
+            return reject({
+              code: 400,
+              msg: "Insufficient balace to perform a debit",
+            });
+          accountStore.balance -= amount;
+          accountStore.updatedAt = new Date();
+          transactionInstance.createTransaction({
+            amount,
+            userId,
+            transactionType: TRANSACTION_TYPES.DEBIT,
+            status: STATUS_TYPES.COMPLETED,
           });
-        accountStore.balance -= amount;
-        accountStore.updatedAt = new Date();
-        transactionInstance.createTransaction({
-          amount,
-          userId,
-          transactionType: TRANSACTION_TYPES.DEBIT,
-          status: STATUS_TYPES.COMPLETED,
-        });
 
-        return resolve({ ...accountStore });
-      } catch (error) {
-        error.source = "Debit account ervice";
-        return reject(error);
-      }
+          return resolve({ ...accountStore });
+        })
+        .catch((error) => {
+          error.source = "Debit account ervice";
+          return reject(error);
+        });
     });
   }
 }
